@@ -28,6 +28,14 @@
                 android:textColor="@android:color/white"
                 android:textSize="34sp" />
 
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="81dp"
+                android:layout_height="81dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@android:drawable/ic_popup_reminder" />
+
         </RelativeLayout>
 
         <GridLayout
@@ -259,7 +267,7 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="91dp"
+                        android:layout_width="47dp"
                         android:layout_height="47dp"
                         android:layout_gravity="center_horizontal"
                         android:src="@drawable/folder1" />

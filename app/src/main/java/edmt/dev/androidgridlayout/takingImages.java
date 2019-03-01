@@ -1,7 +1,5 @@
 package edmt.dev.androidgridlayout;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,8 +7,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,14 +23,19 @@ import java.io.InputStream;
 
 public class takingImages extends AppCompatActivity {
 
+    public static SQLiteHelper sqLiteHelper;
+    final int REQUEST_CODE_GALLERY = 999;
     EditText edtTitle, edtDate;
-    Button btnChoose, btnAdd, btnList,button;
+    Button btnChoose, btnAdd, btnList, button;
     ImageView imageView;
 
-    final int REQUEST_CODE_GALLERY = 999;
-
-    public static SQLiteHelper sqLiteHelper;
-
+    public static byte[] imageViewToByte(ImageView image) {
+        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 10, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,9 @@ public class takingImages extends AppCompatActivity {
 
         sqLiteHelper = new SQLiteHelper(this, "FoodDB.sqlite", null, 1);
 
+        /**
+         * @todo change table name
+         */
         sqLiteHelper.queryData("CREATE TABLE IF NOT EXISTS FOOD(Id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, price VARCHAR, image BLOB)");
 
         btnChoose.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +67,7 @@ public class takingImages extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try{
+                try {
                     sqLiteHelper.insertData(
                             edtTitle.getText().toString().trim(),
                             edtDate.getText().toString().trim(),
@@ -69,8 +77,7 @@ public class takingImages extends AppCompatActivity {
                     edtTitle.setText("");
                     edtDate.setText("");
                     imageView.setImageResource(R.mipmap.ic_launcher);
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
 
                 }
@@ -81,29 +88,20 @@ public class takingImages extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(takingImages.this, DocList.class);
-        startActivity(intent);
-    }
-});
-    }
-
-    public static byte[] imageViewToByte(ImageView image) {
-        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 10, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if(requestCode == REQUEST_CODE_GALLERY){
-            if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == REQUEST_CODE_GALLERY) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(intent, REQUEST_CODE_GALLERY);
-            }
-            else {
+            } else {
                 Toast.makeText(getApplicationContext(), "You don't have permission to access file location!", Toast.LENGTH_SHORT).show();
             }
             return;
@@ -115,16 +113,16 @@ public class takingImages extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null){
+        if (requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null) {
             Uri uri = data.getData();
 
             try {
-                InputStream inputStream = getContentResolver().openInputStream(uri);
+               // InputStream inputStream = getContentResolver().openInputStream(uri);
 
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                imageView.setImageBitmap(bitmap);
+               // Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                imageView.setImageURI(uri);
 
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -132,7 +130,7 @@ public class takingImages extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void init(){
+    private void init() {
         edtTitle = (EditText) findViewById(R.id.edtTitle);
         edtDate = (EditText) findViewById(R.id.edtdate);
         btnChoose = (Button) findViewById(R.id.btnChoose);

@@ -12,31 +12,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        <activity android:name=".Start"/>
-
-
 
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-
-        <activity android:name=".MainActivity" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".displayImage"
             android:label="@string/title_activity_display_image"
             android:theme="@style/AppTheme" />
         <activity android:name=".takingImages" />
-        <activity android:name=".DocList" />
-        <activity android:name=".activities.RegisterActivity" />
+        <activity android:name=".DocList" /><![CDATA[
         >
-        <activity android:name=".activities.UsersListActivity" />
 
+
+    ]]>
     </application>
 
 </manifest>
