@@ -1,15 +1,22 @@
 package edmt.dev.androidgridlayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 // import database
-import edmt.dev.androidgridlayout.database.DatabaseHelper;
-import edmt.dev.androidgridlayout.database.model.Image;
+import java.util.List;
+
+import edmt.dev.androidgridlayout.database.FolderDbHelper;
 import edmt.dev.androidgridlayout.database.model.Folder;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,12 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static String imageStoragePath;
 
-//    private TextView txtDescription;
-//    private ImageView imgPreview;
-//    private VideoView videoPreview;
-//    private Button btnCapturePicture, btnRecordVideo;
-    private DatabaseHelper db;
-
+    private FolderDbHelper db;
+    private Context mContext;
 
 
     GridLayout mainGrid;
@@ -48,35 +51,84 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        db=new DatabaseHelper(this);
+        FolderDbHelper db = new FolderDbHelper(this);
+        List<Folder> allFolder = db.getAllFolder();
+        if (allFolder.size() == 0) {
+            //there are no default folders.
+            db.insertFolder("ID Proof");
+            db.insertFolder("Education");
+            db.insertFolder("Bills");
+            db.insertFolder("Cards");
+            db.insertFolder("Health");
+            db.insertFolder("Certificate");
+            db.insertFolder("Notes");
+
+        }
+        allFolder = db.getAllFolder();
 
         mainGrid = (GridLayout) findViewById(R.id.mainGrid);
+        SetFolders(mainGrid, allFolder);
 
-
-        //Set Event
-        setSingleEvent(mainGrid);
-        //setToggleEvent(mainGrid);
+        //
 
 
     }
 
-    private void setSingleEvent(GridLayout mainGrid) {
-
+    private void SetFolders(GridLayout mainGrid, List<Folder> allFolder) {
         //Loop all child item of Main Grid
-        for (int i = 0; i < mainGrid.getChildCount(); i++) {
-            //You can see , all child item is CardView , so we just cast object to CardView
-            CardView cardView = (CardView) mainGrid.getChildAt(i);
-            final int finalI = i;
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Intent intent = new Intent(MainActivity.this, takingImages.class);
-                    // intent.putExtra("info","This is activity from card item index  "+finalI);
-                    startActivity(intent);
-
-                }
-            });
+        mContext = getApplicationContext();
+        for (Folder f : allFolder) {
+            createCard(f);
         }
+
+    }
+
+    private void createCard(Folder folder) {
+        CardView card = new CardView(mContext);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        card.setLayoutParams(params);
+        // Set CardView corner radius
+        card.setRadius(9);
+
+        // Set cardView content padding
+        card.setContentPadding(15, 15, 15, 15);
+
+        // Set a background color for CardView
+        card.setCardBackgroundColor(Color.parseColor("#FFDDFF"));
+
+        // Set the CardView maximum elevation
+        card.setMaxCardElevation(15);
+
+        // Set CardView elevation
+        card.setCardElevation(9);
+
+        // Initialize a new TextView to put in CardView
+        TextView tv = new TextView(mContext);
+        tv.setLayoutParams(params);
+        tv.setText(folder.getFolder());
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 30);
+        tv.setTextColor(Color.RED);
+
+        // set event listener
+        card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(MainActivity.this, takingImages.class);
+                // intent.putExtra("info","This is activity from card item index  "+finalI);
+                startActivity(intent);
+
+            }
+        });
+
+        // Put the TextView in CardView
+        card.addView(tv);
+
+        // Finally, add the CardView in root layout
+        mainGrid.addView(card);
+
     }
 }

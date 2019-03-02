@@ -17,7 +17,7 @@ public class Folder {
 
                     + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP"
                     + ")";
-
+            
     private int id;
     private String folder;
     private String timestamp;
