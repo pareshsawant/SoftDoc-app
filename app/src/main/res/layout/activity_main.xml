@@ -36,6 +36,15 @@
                 android:layout_centerHorizontal="true"
                 app:srcCompat="@android:drawable/ic_popup_reminder" />
 
+            <Button
+                android:id="@+id/addFolder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="13dp"
+                android:text="Add Folder" />
+
         </RelativeLayout>
 
         <GridLayout

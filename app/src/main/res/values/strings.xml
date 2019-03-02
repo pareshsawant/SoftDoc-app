@@ -22,11 +22,13 @@
     <string name="text_hello">Hello,</string>
 
 
-
     <string name="home">Home</string>
 
     <string name="next">Next</string>
     <string name="skip">Skip</string>
     <string name="start">Start</string>
+    <string name="instructions">
+Place your fingertip on the Home button to verify your identity
+</string>
 
 </resources>

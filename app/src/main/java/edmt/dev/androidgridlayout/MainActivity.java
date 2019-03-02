@@ -6,9 +6,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     GridLayout mainGrid;
+    Button addFolderBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
         mainGrid = (GridLayout) findViewById(R.id.mainGrid);
         SetFolders(mainGrid, allFolder);
 
-        //
+        addFolderBtn = (Button) findViewById(R.id.addFolder);
+        addFolderBtn.setOnClickListener(showAddFolderPopUp);
 
 
     }
@@ -130,5 +132,23 @@ public class MainActivity extends AppCompatActivity {
         // Finally, add the CardView in root layout
         mainGrid.addView(card);
 
+    }
+
+    // code to add folder
+
+    // Create an anonymous implementation of OnClickListener
+    private View.OnClickListener showAddFolderPopUp = new View.OnClickListener() {
+        public void onClick(View v) {
+            // show pop up to enter folder name
+            // when user clicks on add
+            addFolderToDb("Test Folder");
+        }
+    };
+
+    private void addFolderToDb(String folder) {
+        FolderDbHelper db = new FolderDbHelper(this);
+        long folderId = db.insertFolder(folder);
+        Folder newlyCreatedFolder = db.getFolder(folderId);
+        createCard(newlyCreatedFolder);
     }
 }
