@@ -73,9 +73,26 @@
             android:layout_marginBottom="21dp"
             android:text="Done" />
 
+        <Button
+            android:id="@+id/camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="80dp"
+            android:layout_marginTop="26dp"
+            android:text="Camera" />
+
+        <ImageView
+            android:id="@+id/imgPreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
+
+
     </RelativeLayout>
-
-
 
 
 </android.support.constraint.ConstraintLayout>

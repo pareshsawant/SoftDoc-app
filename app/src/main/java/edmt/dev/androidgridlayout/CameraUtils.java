@@ -83,6 +83,7 @@ public class CameraUtils {
     }
 
     public static Uri getOutputMediaFileUri(Context context, File file) {
+        String x = context.getPackageName();
         return FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file);
     }
 
